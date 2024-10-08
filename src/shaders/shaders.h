@@ -1,15 +1,18 @@
 #pragma once
+#include "../include.h"
 #include <string>
-#include <GL/gl.h>
-#define SHADER_PATH "src/shaders/programs/"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+const std::string SHADER_PATH = ".\\..\\src\\shaders\\programs\\";
 
 namespace Shaders {
     class ShaderProgram {
         private: 
-            GLuint vertexShader;
-            GLuint fragmentShader;
         public:
-            ShaderProgram create(std::string vertexPath, std::string fragmentPath);
-            ShaderProgram(std::string vertexPath, std::string fragmentPath);
+            GLuint programID;
+            void create(const char* vertexPath, const char* fragmentPath);
+            ShaderProgram() {};
     };
 }

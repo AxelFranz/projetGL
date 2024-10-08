@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(OpenGLApp)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 set(EXECUTABLE_NAME "projetOpenGL")
 
@@ -11,14 +11,14 @@ include(FetchContent)
 FetchContent_Declare(
     glfw
     GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG        3.3.8  # You can change this tag to the version you want
+    GIT_TAG        3.3.8  
 )
 FetchContent_MakeAvailable(glfw)
 
 FetchContent_Declare(
     glad
     GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG        v0.1.34  # You can change this tag to the version you want
+    GIT_TAG        v0.1.34 
 )
 FetchContent_MakeAvailable(glad)
 
