@@ -12,4 +12,4 @@ void time_log(FILE *stream, const char* fmt, ...)
     va_end(arg);
 }
 
-
+//TODO : Create exit function that destroy Imgui and GLFW 
