@@ -10,9 +10,11 @@ const std::string SHADER_PATH = ".\\..\\src\\shaders\\programs\\";
 namespace Shaders {
     class ShaderProgram {
         private: 
-        public:
             GLuint programID;
             void create(const char* vertexPath, const char* fragmentPath);
+        public:
+            void bind();
+            void path(const char* vertexPath, const char* fragmentPath);
             ShaderProgram() {};
     };
 }

@@ -11,3 +11,5 @@ void time_log(FILE *stream, const char* fmt, ...)
     vfprintf(stream,fmt,arg);
     va_end(arg);
 }
+
+

@@ -1,38 +1,52 @@
-cmake_minimum_required(VERSION 3.14)
-project(OpenGLApp)
+# Version minimale de CMake
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 20)
+# Spécifier le compilateur C et C++
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
 
-set(EXECUTABLE_NAME "projetOpenGL")
+# Nom du projet
+project(projetGL)
 
-include(FetchContent)
+# Définir le nom de l'exécutable via une variable
+set(EXECUTABLE_NAME "projetGL")
 
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG        3.3.8  
-)
-FetchContent_MakeAvailable(glfw)
+# Ajouter tous les fichiers source dans le dossier src/ récursivement
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
-FetchContent_Declare(
-    glad
-    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG        v0.1.34 
-)
-FetchContent_MakeAvailable(glad)
+# Définir l'exécutable avec les sources trouvées
+add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
-file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
+# Inclure GLEW
+include_directories(deps/glew-cmake/include)
 
-add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
+# Inclure le chemin de la bibliothèque GLEW
+set(GLEW_LIBRARY "${CMAKE_SOURCE_DIR}/deps/glew-cmake/build/lib/libglew.a")  # Ajuste le chemin si nécessaire
 
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${glad_SOURCE_DIR}/include)
+# Définir les options de compilation pour GLEW
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE GLEW_STATIC)  # Utiliser la version statique de GLEW
 
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE glfw glad)
+# GLFW : désactiver la construction des exemples, tests et documentation
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 
+# Inclure GLFW
+add_subdirectory(deps/glfw)
+include_directories(deps/glfw/include)
+
+# GLM : bibliothèque header-only
+include_directories(deps/glm)
+
+# ImGUI : ajouter les sources d'ImGui et créer une bibliothèque statique
+include_directories(deps/imgui)
+file(GLOB IMGUI_SOURCES deps/imgui/*.cpp deps/imgui/backends/imgui_impl_glfw.cpp deps/imgui/backends/imgui_impl_opengl3.cpp)
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PUBLIC deps/imgui deps/imgui/backends)
+
+# Lier les bibliothèques à l'exécutable
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE glfw ${GLEW_LIBRARY} imgui)
+
+# Pour OpenGL : trouver la bibliothèque OpenGL et lier à l'exécutable
 find_package(OpenGL REQUIRED)
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE OpenGL::GL)
-
-
-
-
