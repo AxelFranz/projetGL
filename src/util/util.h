@@ -6,3 +6,5 @@
 #include <chrono>
 
 void time_log(FILE *stream, const char* fmt, ...);
+
+void properExit(int exitcode);

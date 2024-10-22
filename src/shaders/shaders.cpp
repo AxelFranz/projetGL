@@ -23,8 +23,7 @@ void ShaderProgram::create(const char *vertexPath, const char *fragmentPath)
     else
     {
         fprintf(stderr, "[shader] Vertex shader %s could not be found !\n", vPath.c_str());
-        glfwTerminate();
-        exit(1);
+        properExit(1);
     }
 
     std::ifstream fStream(fPath.c_str(), std::ios::in);
@@ -38,8 +37,7 @@ void ShaderProgram::create(const char *vertexPath, const char *fragmentPath)
     else
     {
         fprintf(stderr, "[shader] Fragment Shader %s could not be found !\n", fPath.c_str());
-        glfwTerminate();
-        exit(1);
+        properExit(1);
     }
 
     time_log(stdout, "[shader] Compiling vertex shader...\n");
@@ -128,8 +126,7 @@ void ShaderProgram::path(const char *vertexPath, const char *fragmentPath)
 {
     create(vertexPath,fragmentPath);
     if(programID == -1) {
-        glfwTerminate();
-        exit(1);
+        properExit(1);
     }
 }
 

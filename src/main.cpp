@@ -63,6 +63,7 @@ void View::draw()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderPrg.bind();
+    glUniform3fv(0,1,&color[0]);
 
     //glUniform3fv(0, sizeof(color), &color[0]);
     glEnableVertexAttribArray(0);
@@ -90,11 +91,12 @@ void View::imgui_init()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
-    ImGui::GetIO().FontGlobalScale = 2.0f;
+    ImGui::GetIO().FontGlobalScale = 1.0f;
     ImGui::NewFrame();
     ImGui::Begin("Debug window");
     ImGui::Text("Use this window to debug");
-    ImGui::SetWindowSize({0, 0});
+    ImGui::Text("FPS : %.1f",ImGui::GetIO().Framerate);
+    ImGui::SetWindowSize({200,400});
 
     ImGui::SliderFloat3("Color", &color[0], 0, 1);
 
@@ -139,7 +141,7 @@ int main()
     if (err != GLEW_OK)
     {
         std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(err) << std::endl;
-        return -1;
+        properExit(1);
     }
 
     view.init();
@@ -149,10 +151,6 @@ int main()
         view.draw();
     }
 
-    glfwTerminate();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    properExit(0);
 
-    return 0;
 }
