@@ -1,6 +1,8 @@
 #include <iostream>
 #include "include.h"
 #include "shaders/shaders.h"
+#include <GL/wglew.h>
+#include <GL/glext.h>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -14,6 +16,7 @@ private:
 
 public:
     GLFWwindow *window;
+    float frames;
     View() {}
     void init();
     void draw();
@@ -63,9 +66,8 @@ void View::draw()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderPrg.bind();
-    glUniform3fv(0,1,&color[0]);
+    glUniform3fv(0, 1, &color[0]);
 
-    //glUniform3fv(0, sizeof(color), &color[0]);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 
@@ -95,8 +97,8 @@ void View::imgui_init()
     ImGui::NewFrame();
     ImGui::Begin("Debug window");
     ImGui::Text("Use this window to debug");
-    ImGui::Text("FPS : %.1f",ImGui::GetIO().Framerate);
-    ImGui::SetWindowSize({200,400});
+    ImGui::Text("FPS : %.2f", ImGui::GetIO().Framerate);
+    ImGui::SetWindowSize({200, 400});
 
     ImGui::SliderFloat3("Color", &color[0], 0, 1);
 
@@ -152,5 +154,4 @@ int main()
     }
 
     properExit(0);
-
 }
