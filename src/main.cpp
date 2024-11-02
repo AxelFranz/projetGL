@@ -12,6 +12,8 @@ class View
 private:
     Shaders::ShaderProgram shaderPrg;
     GLuint vertexbuffer;
+    Geometry::VBO vbo;
+    Geometry::VAO vao;
     vec3 color;
 
 public:
@@ -36,24 +38,14 @@ void checkOpenGLError()
 
 void View::init()
 {
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f,
-        -1.0f,
-        0.0f,
-        1.0f,
-        -1.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-    };
-    // This will identify our vertex buffer
-    // Generate 1 buffer, put the resulting identifier in vertexbuffer
-    glGenBuffers(1, &vertexbuffer);
-    // The following commands will talk about our 'vertexbuffer' buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    // Give our vertices to OpenGL.
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    std::vector<vec3> positions;
+    positions.push_back(vec3(-1.f, -1.f, 0.f));
+    positions.push_back(vec3(1.f, -1.f, 0.f));
+    positions.push_back(vec3(0.f, 1.f, 0.f));
+
+    vbo = Geometry::VBO(positions);
+    vao = Geometry::VAO(vbo);
+
     shaderPrg.path("test.vs", "test.fs");
 
     color = vec3(1.f, 0.f, 0.f);
@@ -68,22 +60,13 @@ void View::draw()
     shaderPrg.bind();
     glUniform3fv(0, 1, &color[0]);
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    // Bind le VAO (contient déjà les informations du VBO et des attributs)
+    vao.bind();
 
-    glVertexAttribPointer(
-        0,        // attribute 0
-        3,        // size
-        GL_FLOAT, // type
-        GL_FALSE, // normalized?
-        0,        // stride
-        (void *)0 // array buffer offset
-    );
+    vao.draw();
 
-    // Draw the triangle !
-    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glBindVertexArray(0);
 
-    glDisableVertexAttribArray(0);
     imgui_render();
     glfwSwapBuffers(window);
     glfwPollEvents();
